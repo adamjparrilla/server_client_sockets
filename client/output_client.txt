@@ -1,0 +1,30 @@
+uhx02:/home/a/ajp808/ICS451/homework9.1/client% ./client 25183
+Client Socket has been created
+Connected to server
+-------- SYN State --------
+Source Port: 33812
+Destination Port: 25183
+Sequence Number: 1804289385
+Acknowledgment Number: 1804289386
+Flags: SYN
+Window Size: 17520
+Checksum: 0xffff
+Urgent Pointer: 0
+-------- SYN_ACK State --------
+Source Port: 25183
+Destination Port: 33812
+Sequence Number: 1804289386
+Acknowledgment Number: 1804289387
+Flags: SYN ACK
+Window Size: 17520
+Checksum: 0xffff
+Urgent Pointer: 0
+-------- ACK State --------
+Source Port: 33812
+Destination Port: 25183
+Sequence Number: 1804289387
+Acknowledgment Number: 1804289388
+Flags: ACK
+Window Size: 17520
+Checksum: 0xffff
+Urgent Pointer: 0
