@@ -9,7 +9,7 @@
 // Enumeration for TCP flags
 enum FLAGS {
   FIN,
-  SYN_FLAG,  // Renamed from SYN to avoid conflict
+  SYN_FLAG,
   RST,
   PSH,
   ACK_FLAG,
@@ -18,10 +18,11 @@ enum FLAGS {
 
 // Enum for the states
 enum STATES {
-  LISTEN_STATE,  // Renamed from SYN to avoid conflict
-  SYN,
+  LISTEN_STATE,
+  SYN_STATE,
   SYN_ACK_STATE,
-  ACK_STATE
+  ACK_STATE,
+  FINAL_ACK_STATE
 };
 
 // Structure for the TCP header
@@ -61,13 +62,16 @@ void set_flags(struct tcp_header *header, int state) {
   case LISTEN_STATE:
     // No changes for LISTEN_STATE state
     break;
-  case SYN:
+  case SYN_STATE:
     header->flags |= (1 << SYN_FLAG);
     break;
   case SYN_ACK_STATE:
     header->flags |= (1 << SYN_FLAG) | (1 << ACK_FLAG);
     break;
   case ACK_STATE:
+    header->flags |= (1 << ACK_FLAG);
+    break;
+  case FINAL_ACK_STATE:
     header->flags |= (1 << ACK_FLAG);
     break;
   default:
@@ -145,17 +149,20 @@ int main(int argc, char *argv[]) {
 
   // Simulate 3-way handshake
   initialize_tcp_header(&handshake_header, port, ntohs(client_address.sin_port), rand(), 0, 17520, 0xffff, 0);
-  
+    
   set_flags(&handshake_header, LISTEN_STATE); // No output for LISTEN_STATE state
 
-  set_flags(&handshake_header, SYN);
-  print_header(&handshake_header, "SYN State");
+  set_flags(&handshake_header, SYN_STATE);
+  print_header(&handshake_header, "Step 1: SYN received");
 
   set_flags(&handshake_header, SYN_ACK_STATE);
-  print_header(&handshake_header, "SYN_ACK State");
+  print_header(&handshake_header, "Step 2: SYN ACK sent");
 
   set_flags(&handshake_header, ACK_STATE);
-  print_header(&handshake_header, "ACK State");
+  print_header(&handshake_header, "Step 3: ACK received");
+
+  set_flags(&handshake_header, FINAL_ACK_STATE);
+  print_header(&handshake_header, "Step 4: FINAL ACK sent");
 
   // Close sockets
   close(client_socket);

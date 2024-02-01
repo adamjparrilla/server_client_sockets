@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
-#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <arpa/inet.h> // Include arpa/inet.h for inet_addr function
 #include <unistd.h>
 #include <stdint.h>
+#include <time.h> // Added for time functions
 
 // Enumeration for TCP flags
 enum FLAGS {
@@ -21,7 +23,8 @@ enum STATES {
   LISTEN,
   SYN_STATE,
   SYN_ACK_STATE,
-  ACK_STATE
+  ACK_STATE,
+  FINAL_ACK_STATE
 };
 
 // Structure for the TCP header
@@ -70,6 +73,9 @@ void set_flags(struct tcp_header *header, int state) {
   case ACK_STATE:
     header->flags |= (1 << ACK_FLAG);
     break;
+  case FINAL_ACK_STATE:
+    header->flags |= (1 << ACK_FLAG);
+    break;
   default:
     fprintf(stderr, "Invalid state\n");
     exit(1);
@@ -104,14 +110,13 @@ int main(int argc, char *argv[]) {
   struct sockaddr_in server_address;
 
   // Create the client socket
-  int client_socket = socket(AF_INET, SOCK_STREAM, 0);
+  int client_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
   printf("Client Socket has been created\n");
 
   // Connect to the server
   server_address.sin_family = AF_INET;
   server_address.sin_port = htons(port);
-  server_address.sin_addr.s_addr = inet_addr("127.0.0.1");
-
+  server_address.sin_addr.s_addr = inet_addr("127.0.0.1"); // Use inet_addr function
   connect(client_socket, (struct sockaddr *)&server_address, sizeof(server_address));
   printf("Connected to server\n");
 
@@ -128,13 +133,16 @@ int main(int argc, char *argv[]) {
   set_flags(&handshake_header, LISTEN); // No output for LISTEN state
 
   set_flags(&handshake_header, SYN_STATE);
-  print_header(&handshake_header, "SYN State");
+  print_header(&handshake_header, "Step 1: SYN sent");
 
   set_flags(&handshake_header, SYN_ACK_STATE);
-  print_header(&handshake_header, "SYN_ACK State");
+  print_header(&handshake_header, "Step 2: SYN ACK received");
 
   set_flags(&handshake_header, ACK_STATE);
-  print_header(&handshake_header, "ACK State");
+  print_header(&handshake_header, "Step 3: ACK sent");
+
+  set_flags(&handshake_header, FINAL_ACK_STATE);
+  print_header(&handshake_header, "Step 3: FINAL ACK received");
 
   // Close the socket
   close(client_socket);

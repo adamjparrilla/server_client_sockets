@@ -1,18 +1,18 @@
-uhx02:/home/a/ajp808/ICS451/homework9.1/server% ./server 25183
+uhx02:/home/a/ajp808/ICS451/test/server% ./server 25183
 Server Socket has been created
 Server is listening on port 25183...
-Accepted connection from 127.0.0.1:33812
--------- SYN State --------
+Accepted connection from 127.0.0.1:36528
+-------- Step 1: SYN received --------
 Source Port: 25183
-Destination Port: 33812
+Destination Port: 36528
 Sequence Number: 1804289385
 Acknowledgment Number: 1804289386
 Flags: SYN
 Window Size: 17520
 Checksum: 0xffff
 Urgent Pointer: 0
--------- SYN_ACK State --------
-Source Port: 33812
+-------- Step 2: SYN ACK sent --------
+Source Port: 36528
 Destination Port: 25183
 Sequence Number: 1804289386
 Acknowledgment Number: 1804289387
@@ -20,11 +20,20 @@ Flags: SYN ACK
 Window Size: 17520
 Checksum: 0xffff
 Urgent Pointer: 0
--------- ACK State --------
+-------- Step 3: ACK received --------
 Source Port: 25183
-Destination Port: 33812
+Destination Port: 36528
 Sequence Number: 1804289387
 Acknowledgment Number: 1804289388
+Flags: ACK
+Window Size: 17520
+Checksum: 0xffff
+Urgent Pointer: 0
+-------- Step 4: FINAL ACK sent --------
+Source Port: 36528
+Destination Port: 25183
+Sequence Number: 1804289388
+Acknowledgment Number: 1804289389
 Flags: ACK
 Window Size: 17520
 Checksum: 0xffff
